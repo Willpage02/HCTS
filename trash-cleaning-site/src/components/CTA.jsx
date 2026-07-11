@@ -1,4 +1,4 @@
-function CTA() {
+function CTA({ openQuote }) {
 
   return (
     <section
@@ -9,40 +9,49 @@ function CTA() {
       "
     >
 
-      <div className="
+      <div
+        className="
         max-w-5xl
         mx-auto
         text-center
-      ">
+        "
+      >
 
-
-        <h2 className="
+        <h2
+          className="
           text-4xl
           md:text-6xl
           font-bold
           text-white
-        ">
+          "
+        >
           Ready for Cleaner Trash Bins?
         </h2>
 
 
-        <p className="
+        <p
+          className="
           mt-6
           text-xl
           text-gray-200
-        ">
+          "
+        >
           Get fresh, sanitized, odor-free bins
           without the hassle.
         </p>
 
 
-        <div className="
+        <div
+          className="
           mt-10
           flex
           justify-center
-        ">
+          "
+        >
 
-          <button className="
+          <button
+            onClick={() => openQuote("quote")}
+            className="
             bg-[#F6B72E]
             text-[#0B1F3A]
             px-10
@@ -52,9 +61,11 @@ function CTA() {
             text-lg
             hover:scale-105
             transition
-          ">
+            "
+          >
             Get Instant Quote
           </button>
+
 
         </div>
 

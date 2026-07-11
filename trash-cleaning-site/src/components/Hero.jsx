@@ -1,6 +1,6 @@
 import logo from "../assets/honeycomb-logo.jpeg";
 
-function Hero() {
+function Hero({ openQuote }) {
   return (
     <section
       className="
@@ -16,14 +16,16 @@ function Hero() {
       "
     >
 
-      <div className="
+      <div
+        className="
         absolute
         inset-0
         bg-gradient-to-b
         from-[#0B1F3A]
         via-[#12345B]
         to-[#0B1F3A]
-      " />
+        "
+      />
 
 
       <div
@@ -103,6 +105,7 @@ function Hero() {
         >
 
           <button
+            onClick={() => openQuote("quote")}
             className="
             bg-[#F6B72E]
             text-[#0B1F3A]
@@ -120,6 +123,7 @@ function Hero() {
 
 
           <button
+            onClick={() => openQuote("booking")}
             className="
             border-2
             border-white
