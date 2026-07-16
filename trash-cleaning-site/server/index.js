@@ -20,7 +20,7 @@ app.use(express.json());
 
 const auth = new google.auth.GoogleAuth({
 
-  keyFile: "./credentials.json",
+  credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS),
 
   scopes: [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -127,7 +127,6 @@ app.post("/api/leads", async (req, res) => {
 
 
 
-
 /* -------------------------------- */
 /* Stripe Checkout Session          */
 /* -------------------------------- */
@@ -204,11 +203,13 @@ app.post("/api/create-checkout-session", async (req,res)=>{
 
       metadata:{
 
+
         serviceName: service.title,
 
         serviceType: service.type,
 
         bins: String(service.bins),
+
 
       },
 
@@ -257,6 +258,7 @@ app.post("/api/create-checkout-session", async (req,res)=>{
     });
 
 
+
   }
 
 
@@ -267,10 +269,10 @@ app.post("/api/create-checkout-session", async (req,res)=>{
 
 
 
-
 /* -------------------------------- */
 /* Stripe Customer Portal           */
 /* -------------------------------- */
+
 
 app.post("/api/create-customer-portal", async (req,res)=>{
 
@@ -298,10 +300,13 @@ app.post("/api/create-customer-portal", async (req,res)=>{
 
     const session = await stripe.billingPortal.sessions.create({
 
+
       customer: customerId,
+
 
       return_url:
         "https://honeycombtrash.com",
+
 
     });
 
@@ -336,6 +341,7 @@ app.post("/api/create-customer-portal", async (req,res)=>{
     });
 
 
+
   }
 
 
@@ -346,16 +352,16 @@ app.post("/api/create-customer-portal", async (req,res)=>{
 
 
 
-
 /* -------------------------------- */
 /* Start Server                     */
 /* -------------------------------- */
 
-app.listen(5000,()=>{
+
+app.listen(process.env.PORT || 5000,()=>{
 
 
   console.log(
-    "Server running on port 5000"
+    "Server running on port " + (process.env.PORT || 5000)
   );
 
 
