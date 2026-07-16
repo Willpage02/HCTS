@@ -7,24 +7,31 @@ function Navbar() {
   const [open, setOpen] = useState(false);
 
 
+
   const links = [
+
     {
       name: "Services",
       href: "#services",
     },
+
     {
       name: "Why Us",
       href: "#why",
     },
+
     {
       name: "Service Area",
       href: "#service-area",
     },
+
     {
       name: "FAQ",
       href: "#faq",
     },
+
   ];
+
 
 
   const scrollToServices = () => {
@@ -35,12 +42,15 @@ function Navbar() {
         behavior: "smooth",
       });
 
+
     setOpen(false);
 
   };
 
 
+
   return (
+
     <nav
       className="
       fixed
@@ -52,6 +62,7 @@ function Navbar() {
       backdrop-blur-md
       "
     >
+
 
       <div
         className="
@@ -74,6 +85,7 @@ function Navbar() {
           "
         >
 
+
           {links.map((link) => (
 
             <a
@@ -89,6 +101,7 @@ function Navbar() {
             </a>
 
           ))}
+
 
 
           <button
@@ -110,6 +123,7 @@ function Navbar() {
 
 
 
+
         <button
           className="md:hidden"
           onClick={() => setOpen(!open)}
@@ -121,6 +135,8 @@ function Navbar() {
 
 
       </div>
+
+
 
 
 
@@ -136,6 +152,7 @@ function Navbar() {
           "
         >
 
+
           {links.map((link) => (
 
             <a
@@ -144,7 +161,9 @@ function Navbar() {
               className="block"
               onClick={() => setOpen(false)}
             >
+
               {link.name}
+
             </a>
 
           ))}
@@ -155,6 +174,7 @@ function Navbar() {
             onClick={scrollToServices}
             className="
             bg-[#F6B72E]
+            text-[#0B1F3A]
             px-6
             py-3
             rounded-full
@@ -169,8 +189,11 @@ function Navbar() {
 
       )}
 
+
     </nav>
+
   );
+
 }
 
 

@@ -1,4 +1,4 @@
-function Footer() {
+function Footer({ openCancel }) {
 
   return (
     <footer
@@ -52,6 +52,8 @@ function Footer() {
 
 
 
+
+
           {/* Contact */}
           <div>
 
@@ -68,23 +70,79 @@ function Footer() {
 
             <ul
               className="
-              space-y-3
+              space-y-4
               text-gray-300
               "
             >
 
+
               <li>
-                📞 (XXX) XXX-XXXX
+
+                <p className="font-semibold text-white">
+                  Wade
+                </p>
+
+
+                <a
+                  href="tel:9016740359"
+                  className="hover:text-[#F6B72E]"
+                >
+                  📞 (901) 674-0359
+                </a>
+
+
+                <br />
+
+
+                <a
+                  href="mailto:wadecline@honeycombtrash.com"
+                  className="hover:text-[#F6B72E]"
+                >
+                  ✉️ wadecline@honeycombtrash.com
+                </a>
+
+
               </li>
 
 
+
+
               <li>
-                ✉️ email@example.com
+
+
+                <p className="font-semibold text-white">
+                  Deontrez
+                </p>
+
+
+                <a
+                  href="tel:9013994113"
+                  className="hover:text-[#F6B72E]"
+                >
+                  📞 (901) 399-4113
+                </a>
+
+
+                <br />
+
+
+                <a
+                  href="mailto:Deontreztodd88@gmail.com"
+                  className="hover:text-[#F6B72E]"
+                >
+                  ✉️ Deontreztodd88@gmail.com
+                </a>
+
+
               </li>
+
 
             </ul>
 
+
           </div>
+
+
 
 
 
@@ -111,33 +169,43 @@ function Footer() {
             >
 
               <li>
+
                 <a
                   href="#"
                   className="hover:text-[#F6B72E]"
                 >
                   Facebook
                 </a>
+
               </li>
 
 
+
               <li>
+
                 <a
                   href="#"
                   className="hover:text-[#F6B72E]"
                 >
                   Instagram
                 </a>
+
               </li>
 
+
             </ul>
+
 
           </div>
 
 
 
 
-          {/* Information */}
+
+
+          {/* Subscription */}
           <div>
+
 
             <h3
               className="
@@ -146,37 +214,49 @@ function Footer() {
               mb-5
               "
             >
-              Information
+              Subscription
             </h3>
 
 
-            <ul
+
+            <button
+              onClick={openCancel}
               className="
-              space-y-3
-              text-gray-300
+              bg-[#F6B72E]
+              text-[#0B1F3A]
+              px-6
+              py-3
+              rounded-full
+              font-bold
+              hover:scale-105
+              transition
               "
             >
-
-              <li>
-                Service Area
-              </li>
+              Cancel Subscription
+            </button>
 
 
-              <li>
-                Privacy Policy
-              </li>
 
+            <p
+              className="
+              mt-4
+              text-gray-300
+              leading-relaxed
+              "
+            >
+              Need to stop your service?
+              Submit a cancellation request
+              and Honeycomb will handle it.
+            </p>
 
-              <li>
-                Terms & Conditions
-              </li>
-
-            </ul>
 
           </div>
 
 
+
         </div>
+
+
 
 
 
@@ -199,10 +279,14 @@ function Footer() {
         </div>
 
 
+
       </div>
+
 
     </footer>
   );
+
 }
+
 
 export default Footer;

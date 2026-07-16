@@ -1,5 +1,16 @@
 function CTA() {
 
+  const scrollToServices = () => {
+
+    document
+      .getElementById("services")
+      .scrollIntoView({
+        behavior: "smooth",
+      });
+
+  };
+
+
   return (
     <section
       className="
@@ -50,13 +61,7 @@ function CTA() {
         >
 
           <button
-            onClick={() =>
-              document
-                .getElementById("services")
-                .scrollIntoView({
-                  behavior: "smooth",
-                })
-            }
+            onClick={scrollToServices}
             className="
             bg-[#F6B72E]
             text-[#0B1F3A]

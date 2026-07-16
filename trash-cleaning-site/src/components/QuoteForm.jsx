@@ -3,6 +3,7 @@ import { useState } from "react";
 function QuoteForm({ service = {}, onClose }) {
 
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
 
   const [formData, setFormData] = useState({
@@ -40,8 +41,11 @@ function QuoteForm({ service = {}, onClose }) {
   const handleChange = (e) => {
 
     setFormData({
+
       ...formData,
+
       [e.target.name]: e.target.value,
+
     });
 
   };
@@ -52,20 +56,16 @@ function QuoteForm({ service = {}, onClose }) {
 
     e.preventDefault();
 
-
-    console.log(
-      "Sending customer data:",
-      formData
-    );
+    setSubmitting(true);
 
 
     try {
 
 
-      // Save customer information
-
       const leadResponse = await fetch(
-        "http://localhost:5000/api/leads",
+
+        `${import.meta.env.VITE_API_URL}/api/leads`,
+
         {
 
           method: "POST",
@@ -77,6 +77,7 @@ function QuoteForm({ service = {}, onClose }) {
           body: JSON.stringify(formData),
 
         }
+
       );
 
 
@@ -95,11 +96,13 @@ function QuoteForm({ service = {}, onClose }) {
 
 
 
-      // Commercial inquiries do not use Stripe
+      // Commercial requests stop after Google Sheets
 
       if (service?.type === "commercial") {
 
         setSubmitted(true);
+
+        setSubmitting(false);
 
         return;
 
@@ -107,11 +110,12 @@ function QuoteForm({ service = {}, onClose }) {
 
 
 
-
-      // Booking and subscriptions go to Stripe
+      // Subscription and one-time services go to Stripe
 
       const stripeResponse = await fetch(
-        "http://localhost:5000/api/create-checkout-session",
+
+        `${import.meta.env.VITE_API_URL}/api/create-checkout-session`,
+
         {
 
           method: "POST",
@@ -120,7 +124,6 @@ function QuoteForm({ service = {}, onClose }) {
             "Content-Type": "application/json",
           },
 
-
           body: JSON.stringify({
 
             service: service,
@@ -128,6 +131,7 @@ function QuoteForm({ service = {}, onClose }) {
           }),
 
         }
+
       );
 
 
@@ -152,12 +156,18 @@ function QuoteForm({ service = {}, onClose }) {
     }
 
 
-    catch (error) {
+    catch(error){
 
       console.error(
         "Submission error:",
         error
       );
+
+      alert(
+        "Something went wrong. Please try again."
+      );
+
+      setSubmitting(false);
 
     }
 
@@ -193,9 +203,7 @@ function QuoteForm({ service = {}, onClose }) {
       >
 
 
-
         {!submitted ? (
-
 
           <>
 
@@ -209,7 +217,6 @@ function QuoteForm({ service = {}, onClose }) {
               "
             >
 
-
               <h2
                 className="
                 text-3xl
@@ -219,7 +226,6 @@ function QuoteForm({ service = {}, onClose }) {
               >
                 {getTitle()}
               </h2>
-
 
 
               <button
@@ -260,7 +266,6 @@ function QuoteForm({ service = {}, onClose }) {
                 </p>
 
 
-
                 {service.price && (
 
                   <p className="text-gray-600 mt-1">
@@ -268,8 +273,6 @@ function QuoteForm({ service = {}, onClose }) {
                   </p>
 
                 )}
-
-
 
               </div>
 
@@ -282,11 +285,8 @@ function QuoteForm({ service = {}, onClose }) {
 
             <form
               onSubmit={handleSubmit}
-              className="
-              space-y-4
-              "
+              className="space-y-4"
             >
-
 
 
               <input
@@ -338,7 +338,6 @@ function QuoteForm({ service = {}, onClose }) {
 
 
 
-
               <input
                 required
                 name="address"
@@ -360,32 +359,9 @@ function QuoteForm({ service = {}, onClose }) {
 
 
 
-              {service?.type !== "commercial" && (
-
-                <input
-                  required
-                  type="number"
-                  min="1"
-                  name="bins"
-                  placeholder="Number of Bins"
-                  value={formData.bins}
-                  onChange={handleChange}
-                  className="
-                  w-full
-                  border
-                  rounded-xl
-                  p-3
-                  "
-                />
-
-              )}
-
-
-
-
-
 
               <button
+                disabled={submitting}
                 type="submit"
                 className="
                 w-full
@@ -397,9 +373,22 @@ function QuoteForm({ service = {}, onClose }) {
                 text-lg
                 hover:scale-105
                 transition
+                disabled:opacity-50
                 "
               >
-                Submit Request
+
+                {submitting
+
+                  ? "Processing..."
+
+                  : service?.type === "commercial"
+
+                    ? "Submit Inquiry"
+
+                    : "Continue to Checkout"
+
+                }
+
               </button>
 
 
@@ -413,14 +402,12 @@ function QuoteForm({ service = {}, onClose }) {
         ) : (
 
 
-
           <div
             className="
             text-center
             py-10
             "
           >
-
 
             <div className="text-5xl mb-5">
               ✅
@@ -440,24 +427,11 @@ function QuoteForm({ service = {}, onClose }) {
 
 
 
+            <p className="mt-4 text-gray-600">
 
-            <p
-              className="
-              mt-4
-              text-gray-600
-              "
-            >
-
-              {service?.type === "commercial"
-
-                ? "A Honeycomb representative will contact you shortly regarding your commercial cleaning needs."
-
-                : "Thanks for reaching out. Honeycomb will contact you shortly to confirm your service."
-
-              }
+              A Honeycomb representative will contact you shortly regarding your request.
 
             </p>
-
 
 
 
@@ -477,12 +451,10 @@ function QuoteForm({ service = {}, onClose }) {
             </button>
 
 
-
           </div>
 
 
         )}
-
 
 
       </div>

@@ -6,6 +6,7 @@ function Services({ openQuote }) {
       frequency: "Every 3 Months",
       type: "subscription",
       bins: 2,
+      stripePriceId: "price_1Tt97B3bIcfHTnD1ZzzXY2rN",
       features: [
         "Deep interior & exterior wash",
         "High-pressure cleaning",
@@ -13,12 +14,14 @@ function Services({ openQuote }) {
       ],
       button: "Subscribe",
     },
+
     {
       title: "Seasonal Bee Clean – 1 Bin",
       price: "$25.00",
       frequency: "Every 3 Months",
       type: "subscription",
       bins: 1,
+      stripePriceId: "price_1Tt95w3bIcfHTnD1Odt0eDmN",
       features: [
         "Deep interior & exterior wash",
         "High-pressure cleaning",
@@ -26,12 +29,14 @@ function Services({ openQuote }) {
       ],
       button: "Subscribe",
     },
+
     {
       title: "Bee Clean One Time – 2 Bins",
       price: "$45.00",
       frequency: "One-Time Service",
       type: "booking",
       bins: 2,
+      stripePriceId: "price_1TrNzr3bIcfHTnD18jfsGHar",
       features: [
         "One-time deep cleaning",
         "High-pressure wash",
@@ -39,12 +44,14 @@ function Services({ openQuote }) {
       ],
       button: "Book Service",
     },
+
     {
       title: "Busy Bee Clean – 2 Bins",
       price: "$30.00",
       frequency: "Per Month",
       type: "subscription",
       bins: 2,
+      stripePriceId: "price_1TrNyp3bIcfHTnD1dtXJ2GqR",
       features: [
         "Monthly scheduled cleaning",
         "Odor prevention",
@@ -52,12 +59,14 @@ function Services({ openQuote }) {
       ],
       button: "Subscribe",
     },
+
     {
       title: "Busy Bee Clean – 1 Bin",
       price: "$20.00",
       frequency: "Per Month",
       type: "subscription",
       bins: 1,
+      stripePriceId: "price_1TrNvo3bIcfHTnD1BbA4mXzl",
       features: [
         "Monthly scheduled cleaning",
         "Odor prevention",
@@ -65,12 +74,14 @@ function Services({ openQuote }) {
       ],
       button: "Subscribe",
     },
+
     {
       title: "Bee Clean One Time – 1 Bin",
       price: "$35.00",
       frequency: "One-Time Service",
       type: "booking",
       bins: 1,
+      stripePriceId: "price_1TrNu83bIcfHTnD1hECdx0kM",
       features: [
         "One-time deep cleaning",
         "High-pressure wash",
@@ -286,7 +297,6 @@ function Services({ openQuote }) {
 
 
       </div>
-
     </section>
   );
 }

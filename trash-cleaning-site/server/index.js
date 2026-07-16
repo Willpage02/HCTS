@@ -12,21 +12,32 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
+
 /* -------------------------------- */
 /* Google Sheets Authentication     */
 /* -------------------------------- */
 
 const auth = new google.auth.GoogleAuth({
+
   keyFile: "./credentials.json",
+
   scopes: [
     "https://www.googleapis.com/auth/spreadsheets",
   ],
+
 });
 
+
 const sheets = google.sheets({
+
   version: "v4",
+
   auth,
+
 });
+
+
 
 /* -------------------------------- */
 /* Save Lead to Google Sheets       */
@@ -34,11 +45,16 @@ const sheets = google.sheets({
 
 app.post("/api/leads", async (req, res) => {
 
+
   try {
+
 
     const customer = req.body;
 
+
     console.log("New Customer:", customer);
+
+
 
     await sheets.spreadsheets.values.append({
 
@@ -57,125 +73,239 @@ app.post("/api/leads", async (req, res) => {
           customer.phone,
           customer.address,
           customer.bins,
-          customer.service,
+          customer.serviceName,
           new Date().toLocaleDateString(),
 
         ]],
 
       },
 
+
     });
+
+
 
     res.status(200).json({
 
       success: true,
+
       message: "Lead added to spreadsheet",
 
     });
 
+
+
   }
 
-  catch (error) {
+
+  catch(error){
+
 
     console.error("Google Sheets Error:");
     console.error(error);
 
+
+
     res.status(500).json({
 
-      success: false,
-      message: "Failed to save lead",
-      error: error.message,
+      success:false,
+
+      message:"Failed to save lead",
+
+      error:error.message,
 
     });
 
+
   }
 
+
 });
+
+
+
+
+
+
 
 /* -------------------------------- */
 /* Stripe Checkout Session          */
 /* -------------------------------- */
 
-app.post("/api/create-checkout-session", async (req, res) => {
 
-  try {
+app.post("/api/create-checkout-session", async (req,res)=>{
 
-    const { service, bins } = req.body;
 
-    let lineItems = [];
+  try{
 
-    if (service === "booking") {
 
-      lineItems.push({
+    const { service } = req.body;
 
-        price: process.env.ONE_TIME_PRICE_ID,
-        quantity: 1,
 
-      });
 
-    }
+    if(!service || !service.stripePriceId){
 
-    else if (service === "subscription") {
-
-      lineItems.push({
-
-        price: process.env.MONTHLY_PRICE_ID,
-        quantity: 1,
-
-      });
-
-    }
-
-    else if (service === "quarterly") {
-
-      lineItems.push({
-
-        price: process.env.QUARTERLY_PRICE_ID,
-        quantity: 1,
-
-      });
-
-    }
-
-    else {
 
       return res.status(400).json({
 
-        message: "Invalid service type",
+        message:"Missing Stripe price ID",
 
       });
 
-    }
-
-    const extraBins = Number(bins) - 1;
-
-    if (extraBins > 0) {
-
-      lineItems.push({
-
-        price: process.env.MULTI_BIN_PRICE_ID,
-        quantity: extraBins,
-
-      });
 
     }
+
+
+
+    console.log(
+      "Creating Stripe checkout:",
+      service.title,
+      service.stripePriceId
+    );
+
+
 
     const session = await stripe.checkout.sessions.create({
 
+
+
       mode:
-        service === "subscription"
+        service.type === "subscription"
           ? "subscription"
           : "payment",
 
-      payment_method_types: ["card"],
 
-      line_items: lineItems,
 
-      success_url: "http://localhost:5173/success",
+      customer_creation: "always",
 
-      cancel_url: "http://localhost:5173/cancel",
+
+
+      payment_method_types:[
+
+        "card"
+
+      ],
+
+
+
+      line_items:[
+
+        {
+
+          price: service.stripePriceId,
+
+          quantity:1,
+
+        }
+
+      ],
+
+
+
+      metadata:{
+
+        serviceName: service.title,
+
+        serviceType: service.type,
+
+        bins: String(service.bins),
+
+      },
+
+
+
+      success_url:
+        "https://honeycombtrash.com/success",
+
+
+
+      cancel_url:
+        "https://honeycombtrash.com/cancel",
+
+
 
     });
+
+
+
+    res.json({
+
+      url:session.url,
+
+    });
+
+
+
+  }
+
+
+  catch(error){
+
+
+    console.error("Stripe Error:");
+
+    console.error(error);
+
+
+
+    res.status(500).json({
+
+      message:"Stripe session failed",
+
+      error:error.message,
+
+    });
+
+
+  }
+
+
+});
+
+
+
+
+
+
+
+/* -------------------------------- */
+/* Stripe Customer Portal           */
+/* -------------------------------- */
+
+app.post("/api/create-customer-portal", async (req,res)=>{
+
+
+  try{
+
+
+    const { customerId } = req.body;
+
+
+
+    if(!customerId){
+
+
+      return res.status(400).json({
+
+        message:"Missing Stripe customer ID",
+
+      });
+
+
+    }
+
+
+
+    const session = await stripe.billingPortal.sessions.create({
+
+      customer: customerId,
+
+      return_url:
+        "https://honeycombtrash.com",
+
+    });
+
+
 
     res.json({
 
@@ -183,30 +313,50 @@ app.post("/api/create-checkout-session", async (req, res) => {
 
     });
 
+
+
   }
 
-  catch (error) {
 
-    console.error("Stripe Error:");
+  catch(error){
+
+
+    console.error("Portal Error:");
+
     console.error(error);
+
+
 
     res.status(500).json({
 
-      message: "Stripe session failed",
-      error: error.message,
+      message:"Failed to create customer portal",
+
+      error:error.message,
 
     });
 
+
   }
 
+
 });
+
+
+
+
+
+
 
 /* -------------------------------- */
 /* Start Server                     */
 /* -------------------------------- */
 
-app.listen(5000, () => {
+app.listen(5000,()=>{
 
-  console.log("Server running on port 5000");
+
+  console.log(
+    "Server running on port 5000"
+  );
+
 
 });

@@ -1,6 +1,18 @@
-import logo from "../assets/honeycomb-logo.jpeg";
+import logo from "../assets/Honeycomb-logo.PNG";
 
 function Hero() {
+
+  const scrollToServices = () => {
+
+    document
+      .getElementById("services")
+      .scrollIntoView({
+        behavior: "smooth",
+      });
+
+  };
+
+
   return (
     <section
       className="
@@ -102,13 +114,7 @@ function Hero() {
         >
 
           <button
-            onClick={() =>
-              document
-                .getElementById("services")
-                .scrollIntoView({
-                  behavior: "smooth",
-                })
-            }
+            onClick={scrollToServices}
             className="
             bg-[#F6B72E]
             text-[#0B1F3A]
