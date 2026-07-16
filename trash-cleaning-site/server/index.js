@@ -18,6 +18,12 @@ app.use(express.json());
 /* Google Sheets Authentication     */
 /* -------------------------------- */
 
+if (!process.env.GOOGLE_CREDENTIALS) {
+  console.error("Missing GOOGLE_CREDENTIALS environment variable");
+  process.exit(1);
+}
+
+
 const auth = new google.auth.GoogleAuth({
 
   credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS),
@@ -127,6 +133,7 @@ app.post("/api/leads", async (req, res) => {
 
 
 
+
 /* -------------------------------- */
 /* Stripe Checkout Session          */
 /* -------------------------------- */
@@ -203,13 +210,11 @@ app.post("/api/create-checkout-session", async (req,res)=>{
 
       metadata:{
 
-
         serviceName: service.title,
 
         serviceType: service.type,
 
         bins: String(service.bins),
-
 
       },
 
@@ -263,6 +268,7 @@ app.post("/api/create-checkout-session", async (req,res)=>{
 
 
 });
+
 
 
 
@@ -346,6 +352,7 @@ app.post("/api/create-customer-portal", async (req,res)=>{
 
 
 });
+
 
 
 
