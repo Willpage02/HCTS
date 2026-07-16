@@ -1,6 +1,6 @@
 import logo from "../assets/honeycomb-logo.jpeg";
 
-function Hero({ openQuote }) {
+function Hero() {
   return (
     <section
       className="
@@ -10,7 +10,7 @@ function Hero({ openQuote }) {
       items-center
       justify-center
       px-6
-      pt-24
+      pt-32
       bg-[#0B1F3A]
       overflow-hidden
       "
@@ -45,7 +45,7 @@ function Hero({ openQuote }) {
           mx-auto
           w-72
           md:w-96
-          mb-8
+          mb-10
           rounded-xl
           "
         />
@@ -95,17 +95,20 @@ function Hero({ openQuote }) {
 
         <div
           className="
-          mt-10
+          mt-14
           flex
-          flex-col
-          sm:flex-row
           justify-center
-          gap-5
           "
         >
 
           <button
-            onClick={() => openQuote("quote")}
+            onClick={() =>
+              document
+                .getElementById("services")
+                .scrollIntoView({
+                  behavior: "smooth",
+                })
+            }
             className="
             bg-[#F6B72E]
             text-[#0B1F3A]
@@ -118,28 +121,9 @@ function Hero({ openQuote }) {
             transition
             "
           >
-            Get Instant Quote
-          </button>
-
-
-          <button
-            onClick={() => openQuote("booking")}
-            className="
-            border-2
-            border-white
-            text-white
-            px-10
-            py-4
-            rounded-full
-            font-bold
-            text-lg
-            hover:bg-white
-            hover:text-[#0B1F3A]
-            transition
-            "
-          >
             Book Now
           </button>
+
 
         </div>
 

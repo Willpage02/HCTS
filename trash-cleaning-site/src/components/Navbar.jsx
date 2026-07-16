@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 
-function Navbar({ openQuote }) {
+function Navbar() {
 
   const [open, setOpen] = useState(false);
 
@@ -27,8 +27,22 @@ function Navbar({ openQuote }) {
   ];
 
 
+  const scrollToServices = () => {
+
+    document
+      .getElementById("services")
+      .scrollIntoView({
+        behavior: "smooth",
+      });
+
+    setOpen(false);
+
+  };
+
+
   return (
-    <nav className="
+    <nav
+      className="
       fixed
       top-0
       left-0
@@ -36,24 +50,29 @@ function Navbar({ openQuote }) {
       z-50
       bg-white/80
       backdrop-blur-md
-    ">
+      "
+    >
 
-      <div className="
+      <div
+        className="
         max-w-7xl
         mx-auto
         px-6
         py-4
         flex
         justify-end
-      ">
+        "
+      >
 
 
-        <div className="
+        <div
+          className="
           hidden
           md:flex
           items-center
           gap-8
-        ">
+          "
+        >
 
           {links.map((link) => (
 
@@ -73,7 +92,7 @@ function Navbar({ openQuote }) {
 
 
           <button
-            onClick={() => openQuote("quote")}
+            onClick={scrollToServices}
             className="
             bg-[#F6B72E]
             text-[#0B1F3A]
@@ -83,7 +102,7 @@ function Navbar({ openQuote }) {
             font-bold
             "
           >
-            Get Quote
+            Book Now
           </button>
 
 
@@ -95,7 +114,9 @@ function Navbar({ openQuote }) {
           className="md:hidden"
           onClick={() => setOpen(!open)}
         >
+
           {open ? <X /> : <Menu />}
+
         </button>
 
 
@@ -105,13 +126,15 @@ function Navbar({ openQuote }) {
 
       {open && (
 
-        <div className="
+        <div
+          className="
           md:hidden
           bg-white
           px-6
           pb-6
           space-y-5
-        ">
+          "
+        >
 
           {links.map((link) => (
 
@@ -119,6 +142,7 @@ function Navbar({ openQuote }) {
               key={link.name}
               href={link.href}
               className="block"
+              onClick={() => setOpen(false)}
             >
               {link.name}
             </a>
@@ -126,8 +150,9 @@ function Navbar({ openQuote }) {
           ))}
 
 
+
           <button
-            onClick={() => openQuote("quote")}
+            onClick={scrollToServices}
             className="
             bg-[#F6B72E]
             px-6
@@ -136,7 +161,7 @@ function Navbar({ openQuote }) {
             font-bold
             "
           >
-            Get Quote
+            Book Now
           </button>
 
 

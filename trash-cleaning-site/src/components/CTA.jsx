@@ -1,4 +1,4 @@
-function CTA({ openQuote }) {
+function CTA() {
 
   return (
     <section
@@ -50,7 +50,13 @@ function CTA({ openQuote }) {
         >
 
           <button
-            onClick={() => openQuote("quote")}
+            onClick={() =>
+              document
+                .getElementById("services")
+                .scrollIntoView({
+                  behavior: "smooth",
+                })
+            }
             className="
             bg-[#F6B72E]
             text-[#0B1F3A]
@@ -63,7 +69,7 @@ function CTA({ openQuote }) {
             transition
             "
           >
-            Get Instant Quote
+            Book Now
           </button>
 
 

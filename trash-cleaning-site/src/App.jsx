@@ -15,60 +15,72 @@ function App() {
 
   const [showQuote, setShowQuote] = useState(false);
 
-  const [serviceType, setServiceType] = useState("quote");
+  const [selectedService, setSelectedService] = useState(null);
 
 
-  const openQuote = (type) => {
-    setServiceType(type);
+
+  const openQuote = (service) => {
+
+    setSelectedService(service);
+
     setShowQuote(true);
+
   };
+
 
 
   return (
     <div className="overflow-x-hidden">
 
-      <Navbar
-        openQuote={openQuote}
-      />
+
+      <Navbar />
 
 
       <main>
 
-        <Hero
-          openQuote={openQuote}
-        />
+
+        <Hero />
+
 
         <Services
           openQuote={openQuote}
         />
 
+
         <WhyChooseUs />
+
 
         <ServiceArea />
 
+
         <FAQ />
 
-        <CTA
-          openQuote={openQuote}
-        />
+
+        <CTA />
+
 
       </main>
+
 
 
       <Footer />
 
 
+
       {showQuote && (
 
         <QuoteForm
-          serviceType={serviceType}
+          service={selectedService}
           onClose={() => setShowQuote(false)}
         />
 
       )}
 
+
+
     </div>
   );
 }
+
 
 export default App;

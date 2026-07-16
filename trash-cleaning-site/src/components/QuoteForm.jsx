@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function QuoteForm({ serviceType = "quote", onClose }) {
+function QuoteForm({ service = {}, onClose }) {
 
   const [submitted, setSubmitted] = useState(false);
 
@@ -10,23 +10,31 @@ function QuoteForm({ serviceType = "quote", onClose }) {
     email: "",
     phone: "",
     address: "",
-    bins: "",
-    service: serviceType,
+    bins: service?.bins || "",
+    service: service?.type || "",
+    serviceName: service?.title || "",
   });
+
 
 
   const getTitle = () => {
 
-    if (serviceType === "booking") {
+    if (service?.type === "commercial") {
+      return "Commercial Cleaning Inquiry";
+    }
+
+    if (service?.type === "subscription") {
+      return "Start Your Subscription";
+    }
+
+    if (service?.type === "booking") {
       return "Book Your Cleaning";
     }
 
-    if (serviceType === "subscription") {
-      return "Start Your Monthly Service";
-    }
+    return "Request Cleaning Service";
 
-    return "Get Your Quote";
   };
+
 
 
   const handleChange = (e) => {
@@ -37,6 +45,7 @@ function QuoteForm({ serviceType = "quote", onClose }) {
     });
 
   };
+
 
 
   const handleSubmit = async (e) => {
@@ -52,9 +61,13 @@ function QuoteForm({ serviceType = "quote", onClose }) {
 
     try {
 
-      const response = await fetch(
+
+      // Save customer information
+
+      const leadResponse = await fetch(
         "http://localhost:5000/api/leads",
         {
+
           method: "POST",
 
           headers: {
@@ -62,32 +75,84 @@ function QuoteForm({ serviceType = "quote", onClose }) {
           },
 
           body: JSON.stringify(formData),
+
         }
       );
 
 
-      const result = await response.json();
+
+      const leadResult = await leadResponse.json();
 
 
-      console.log(
-        "Backend response:",
-        result
-      );
 
-
-      if (!response.ok) {
+      if (!leadResponse.ok) {
 
         throw new Error(
-          result.message || "Failed to submit form"
+          leadResult.message || "Failed to submit form"
         );
 
       }
 
 
-      setSubmitted(true);
+
+      // Commercial inquiries do not use Stripe
+
+      if (service?.type === "commercial") {
+
+        setSubmitted(true);
+
+        return;
+
+      }
 
 
-    } catch (error) {
+
+
+      // Booking and subscriptions go to Stripe
+
+      const stripeResponse = await fetch(
+        "http://localhost:5000/api/create-checkout-session",
+        {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+
+          body: JSON.stringify({
+
+            service: service,
+
+          }),
+
+        }
+      );
+
+
+
+      const stripeResult = await stripeResponse.json();
+
+
+
+      if (!stripeResponse.ok) {
+
+        throw new Error(
+          stripeResult.message || "Stripe checkout failed"
+        );
+
+      }
+
+
+
+      window.location.href = stripeResult.url;
+
+
+    }
+
+
+    catch (error) {
 
       console.error(
         "Submission error:",
@@ -96,7 +161,9 @@ function QuoteForm({ serviceType = "quote", onClose }) {
 
     }
 
+
   };
+
 
 
   return (
@@ -114,6 +181,7 @@ function QuoteForm({ serviceType = "quote", onClose }) {
       "
     >
 
+
       <div
         className="
         bg-white
@@ -124,9 +192,13 @@ function QuoteForm({ serviceType = "quote", onClose }) {
         "
       >
 
+
+
         {!submitted ? (
 
+
           <>
+
 
             <div
               className="
@@ -137,6 +209,7 @@ function QuoteForm({ serviceType = "quote", onClose }) {
               "
             >
 
+
               <h2
                 className="
                 text-3xl
@@ -146,6 +219,7 @@ function QuoteForm({ serviceType = "quote", onClose }) {
               >
                 {getTitle()}
               </h2>
+
 
 
               <button
@@ -162,12 +236,57 @@ function QuoteForm({ serviceType = "quote", onClose }) {
             </div>
 
 
+
+
+
+            {service?.title && (
+
+              <div
+                className="
+                mb-6
+                bg-gray-100
+                rounded-xl
+                p-4
+                "
+              >
+
+                <p
+                  className="
+                  font-bold
+                  text-[#0B1F3A]
+                  "
+                >
+                  {service.title}
+                </p>
+
+
+
+                {service.price && (
+
+                  <p className="text-gray-600 mt-1">
+                    {service.price} {service.frequency}
+                  </p>
+
+                )}
+
+
+
+              </div>
+
+            )}
+
+
+
+
+
+
             <form
               onSubmit={handleSubmit}
               className="
               space-y-4
               "
             >
+
 
 
               <input
@@ -183,6 +302,7 @@ function QuoteForm({ serviceType = "quote", onClose }) {
                 p-3
                 "
               />
+
 
 
               <input
@@ -201,6 +321,7 @@ function QuoteForm({ serviceType = "quote", onClose }) {
               />
 
 
+
               <input
                 required
                 name="phone"
@@ -216,10 +337,16 @@ function QuoteForm({ serviceType = "quote", onClose }) {
               />
 
 
+
+
               <input
                 required
                 name="address"
-                placeholder="Service Address"
+                placeholder={
+                  service?.type === "commercial"
+                    ? "Business Address"
+                    : "Service Address"
+                }
                 value={formData.address}
                 onChange={handleChange}
                 className="
@@ -231,50 +358,30 @@ function QuoteForm({ serviceType = "quote", onClose }) {
               />
 
 
-              <input
-                required
-                type="number"
-                name="bins"
-                placeholder="Number of Bins"
-                value={formData.bins}
-                onChange={handleChange}
-                className="
-                w-full
-                border
-                rounded-xl
-                p-3
-                "
-              />
 
 
-              <select
-                name="service"
-                value={formData.service}
-                onChange={handleChange}
-                className="
-                w-full
-                border
-                rounded-xl
-                p-3
-                "
-              >
+              {service?.type !== "commercial" && (
 
-                <option value="quote">
-                  Request Quote
-                </option>
+                <input
+                  required
+                  type="number"
+                  min="1"
+                  name="bins"
+                  placeholder="Number of Bins"
+                  value={formData.bins}
+                  onChange={handleChange}
+                  className="
+                  w-full
+                  border
+                  rounded-xl
+                  p-3
+                  "
+                />
 
-
-                <option value="booking">
-                  Book Service
-                </option>
-
-
-                <option value="subscription">
-                  Monthly Subscription
-                </option>
+              )}
 
 
-              </select>
+
 
 
 
@@ -296,6 +403,7 @@ function QuoteForm({ serviceType = "quote", onClose }) {
               </button>
 
 
+
             </form>
 
 
@@ -305,6 +413,7 @@ function QuoteForm({ serviceType = "quote", onClose }) {
         ) : (
 
 
+
           <div
             className="
             text-center
@@ -312,14 +421,11 @@ function QuoteForm({ serviceType = "quote", onClose }) {
             "
           >
 
-            <div
-              className="
-              text-5xl
-              mb-5
-              "
-            >
+
+            <div className="text-5xl mb-5">
               ✅
             </div>
+
 
 
             <h2
@@ -333,15 +439,26 @@ function QuoteForm({ serviceType = "quote", onClose }) {
             </h2>
 
 
+
+
             <p
               className="
               mt-4
               text-gray-600
               "
             >
-              Thanks for reaching out.
-              Honeycomb will contact you shortly.
+
+              {service?.type === "commercial"
+
+                ? "A Honeycomb representative will contact you shortly regarding your commercial cleaning needs."
+
+                : "Thanks for reaching out. Honeycomb will contact you shortly to confirm your service."
+
+              }
+
             </p>
+
+
 
 
             <button
@@ -360,12 +477,16 @@ function QuoteForm({ serviceType = "quote", onClose }) {
             </button>
 
 
+
           </div>
 
 
         )}
 
+
+
       </div>
+
 
     </div>
 

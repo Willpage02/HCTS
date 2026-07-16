@@ -1,71 +1,111 @@
-function Services() {
-
+function Services({ openQuote }) {
   const services = [
     {
-      title: "One-Time Bin Cleaning",
-      description:
-        "Give your trash bin a deep clean and fresh start.",
+      title: "Seasonal Bee Clean – 2 Bins",
+      price: "$35.00",
+      frequency: "Every 3 Months",
+      type: "subscription",
+      bins: 2,
       features: [
-        "Interior & exterior wash",
+        "Deep interior & exterior wash",
         "High-pressure cleaning",
         "Deodorized finish",
+      ],
+      button: "Subscribe",
+    },
+    {
+      title: "Seasonal Bee Clean – 1 Bin",
+      price: "$25.00",
+      frequency: "Every 3 Months",
+      type: "subscription",
+      bins: 1,
+      features: [
+        "Deep interior & exterior wash",
+        "High-pressure cleaning",
+        "Deodorized finish",
+      ],
+      button: "Subscribe",
+    },
+    {
+      title: "Bee Clean One Time – 2 Bins",
+      price: "$45.00",
+      frequency: "One-Time Service",
+      type: "booking",
+      bins: 2,
+      features: [
+        "One-time deep cleaning",
+        "High-pressure wash",
+        "Fresh deodorized finish",
       ],
       button: "Book Service",
     },
     {
-      title: "Monthly Cleaning",
-      popular: true,
-      description:
-        "The easiest way to keep your bins clean all year.",
+      title: "Busy Bee Clean – 2 Bins",
+      price: "$30.00",
+      frequency: "Per Month",
+      type: "subscription",
+      bins: 2,
       features: [
-        "Every 4 weeks",
+        "Monthly scheduled cleaning",
         "Odor prevention",
         "Automatic scheduling",
       ],
       button: "Subscribe",
     },
     {
-      title: "Quarterly Cleaning",
-      description:
-        "Perfect for seasonal maintenance and upkeep.",
+      title: "Busy Bee Clean – 1 Bin",
+      price: "$20.00",
+      frequency: "Per Month",
+      type: "subscription",
+      bins: 1,
       features: [
-        "Every 3 months",
-        "Seasonal cleaning",
-        "Flexible scheduling",
+        "Monthly scheduled cleaning",
+        "Odor prevention",
+        "Automatic scheduling",
       ],
-      button: "Book",
+      button: "Subscribe",
     },
     {
-      title: "Commercial Dumpster Cleaning",
-      description:
-        "Reliable cleaning for businesses and properties.",
+      title: "Bee Clean One Time – 1 Bin",
+      price: "$35.00",
+      frequency: "One-Time Service",
+      type: "booking",
+      bins: 1,
       features: [
-        "Restaurants",
-        "Apartments & HOAs",
-        "Commercial dumpsters",
+        "One-time deep cleaning",
+        "High-pressure wash",
+        "Fresh deodorized finish",
       ],
-      button: "Request Quote",
+      button: "Book Service",
     },
   ];
 
 
+  const commercialService = {
+    title: "Commercial Dumpster Cleaning",
+    type: "commercial",
+    bins: null,
+    price: "",
+    frequency: "",
+  };
+
+
   return (
-    <section
-      id="services"
-      className="py-24 px-6 bg-white"
-    >
+    <section id="services" className="py-24 px-6 bg-white">
 
       <div className="max-w-7xl mx-auto">
 
 
         <div className="text-center mb-16">
 
-          <h2 className="
+          <h2
+            className="
             text-4xl
             md:text-5xl
             font-bold
             text-[#0B1F3A]
-          ">
+            "
+          >
             Our Services
           </h2>
 
@@ -77,77 +117,76 @@ function Services() {
         </div>
 
 
-        <div className="
+
+        <div
+          className="
           grid
           md:grid-cols-2
-          lg:grid-cols-4
+          lg:grid-cols-3
           gap-8
-        ">
+          "
+        >
 
           {services.map((service) => (
 
             <div
               key={service.title}
-              className={`
-                relative
-                rounded-3xl
-                p-8
-                border
-                hover:-translate-y-2
-                transition
-                hover:shadow-xl
-                ${
-                  service.popular
-                    ? "border-[#F6B72E] shadow-lg"
-                    : "border-gray-200"
-                }
-              `}
+              className="
+              rounded-3xl
+              p-8
+              border
+              border-gray-200
+              hover:-translate-y-2
+              transition
+              hover:shadow-xl
+              "
             >
 
-              {service.popular && (
-                <span className="
-                  absolute
-                  -top-4
-                  left-1/2
-                  -translate-x-1/2
-                  bg-[#F6B72E]
-                  px-5
-                  py-1
-                  rounded-full
-                  font-bold
-                  text-sm
-                ">
-                  MOST POPULAR
-                </span>
-              )}
 
-
-              <h3 className="
+              <h3
+                className="
                 text-2xl
                 font-bold
                 text-[#0B1F3A]
-              ">
+                "
+              >
                 {service.title}
               </h3>
 
 
-              <p className="mt-4 text-gray-600">
-                {service.description}
-              </p>
+
+              <div className="mt-5">
+
+                <p className="text-4xl font-bold text-[#1E5DB8]">
+                  {service.price}
+                </p>
+
+
+                <p className="text-gray-500 font-medium mt-1">
+                  {service.frequency}
+                </p>
+
+              </div>
+
 
 
               <ul className="mt-6 space-y-3 text-gray-700">
 
                 {service.features.map((feature) => (
+
                   <li key={feature}>
                     ✓ {feature}
                   </li>
+
                 ))}
 
               </ul>
 
 
-              <button className="
+
+              <button
+                onClick={() => openQuote(service)}
+                className="
                 mt-8
                 w-full
                 bg-[#1E5DB8]
@@ -156,7 +195,8 @@ function Services() {
                 rounded-full
                 font-bold
                 hover:bg-blue-700
-              ">
+                "
+              >
                 {service.button}
               </button>
 
@@ -166,6 +206,84 @@ function Services() {
           ))}
 
         </div>
+
+
+
+        <div className="mt-16">
+
+
+          <div
+            className="
+            bg-[#0B1F3A]
+            rounded-3xl
+            p-10
+            text-center
+            text-white
+            "
+          >
+
+
+            <h3 className="text-3xl font-bold">
+              Commercial Dumpster Cleaning
+            </h3>
+
+
+
+            <p
+              className="
+              mt-6
+              text-lg
+              max-w-4xl
+              mx-auto
+              leading-relaxed
+              "
+            >
+              Own a restaurant, apartment complex, HOA, property management
+              company, or other business with dumpster service?
+            </p>
+
+
+
+            <p
+              className="
+              mt-4
+              text-lg
+              max-w-4xl
+              mx-auto
+              leading-relaxed
+              text-gray-200
+              "
+            >
+              We provide professional dumpster and commercial waste container
+              cleaning. Contact us for a customized quote tailored to your
+              property's needs.
+            </p>
+
+
+
+            <button
+              onClick={() => openQuote(commercialService)}
+              className="
+              mt-8
+              bg-[#F6B72E]
+              text-[#0B1F3A]
+              px-8
+              py-3
+              rounded-full
+              font-bold
+              hover:opacity-90
+              "
+            >
+              Request Commercial Inquiry
+            </button>
+
+
+
+          </div>
+
+
+        </div>
+
 
       </div>
 
