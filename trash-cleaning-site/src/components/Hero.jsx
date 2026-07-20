@@ -107,7 +107,7 @@ function Hero() {
 
         <div
           className="
-          mt-14
+          mt-12
           flex
           justify-center
           "

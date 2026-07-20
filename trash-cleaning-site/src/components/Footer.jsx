@@ -127,10 +127,10 @@ function Footer({ openCancel }) {
 
 
                 <a
-                  href="mailto:Deontreztodd88@gmail.com"
+                  href="mailto:Deontreztodd88@honeycombtrash.com"
                   className="hover:text-[#F6B72E]"
                 >
-                  ✉️ Deontreztodd88@gmail.com
+                  ✉️ Deontreztodd88@honeycombtrash.com
                 </a>
 
 
